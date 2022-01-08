@@ -1,0 +1,12 @@
+# created by virtualenv automatically
+.env
+__pycache__
+venv/
+lib/
+bin/
+include/
+.project
+.Python
+Pipfile
+Pipfile.lock
+pyvenv.cfg
