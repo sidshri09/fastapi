@@ -24,6 +24,9 @@ app.add_middleware(
 # Use the bin inside the relevant virtual env directory.
 # If you use pipenv shell command, it will create a new child virtual env.
 
+@app.get('/')
+def hello():
+    return {"message":"hello world"}
 
 app.include_router(post.router)
 app.include_router(user.router)
