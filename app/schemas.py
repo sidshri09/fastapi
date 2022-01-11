@@ -38,7 +38,10 @@ class TokenData(BaseModel):
 
 class Body(BaseModel):
     content: str
+    parent_post: Optional[int]
 
+class EditPost(BaseModel):
+    content: str
 
 class ResponsePost(BaseModel):
     id: int
@@ -46,6 +49,7 @@ class ResponsePost(BaseModel):
     user_id: int
     CreatedAt: datetime
     user: ResponseUser
+    parent_post: Optional[int]
 
     class Config:
         orm_mode = True

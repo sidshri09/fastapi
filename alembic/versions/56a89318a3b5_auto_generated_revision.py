@@ -33,6 +33,7 @@ def upgrade():
     sa.Column('published', sa.Boolean(), server_default='True', nullable=False),
     sa.Column('CreatedAt', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('parent_post', sa.Integer, nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )

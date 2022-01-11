@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from fastapi import Response, status, HTTPException, Depends, APIRouter
 from sqlalchemy import util
 from sqlalchemy.orm import Session
@@ -18,8 +18,8 @@ router = APIRouter(
 #
 #
 @router.get("/", response_model=List[schemas.ResponseUser])
-def getUsers(db: Session = Depends(get_db)):
-    users=db.query(models.User).all()
+def getUsers(db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user), limit:int =15, skip:int =0, search:Optional[str]=''):
+    users=db.query(models.User).filter(models.User.email.contains(search)).limit(limit).offset(skip).all()
     if users:
      return users
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="users not found")

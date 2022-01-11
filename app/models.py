@@ -14,6 +14,7 @@ class Post(Base):
     published = Column(Boolean, nullable=False, server_default='True')
     CreatedAt = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     user_id = Column(Integer, ForeignKey("users.id",ondelete="CASCADE"), nullable=False)
+    parent_post = Column(Integer, nullable=True)
     user = relationship("User")
 
 class User(Base):
