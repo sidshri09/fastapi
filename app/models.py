@@ -25,6 +25,7 @@ class User(Base):
     password = Column(String, nullable=False)
     phone = Column(String, nullable=True)
     CreatedAt = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+    profile_pic = Column(Text, nullable=True, server_default="https://bagheera-img.s3.amazonaws.com/another%40example.com/download.jpeg")
 
 class Vote(Base):
     __tablename__="votes"

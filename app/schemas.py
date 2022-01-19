@@ -1,4 +1,5 @@
 from datetime import datetime
+import profile
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import Optional
@@ -10,6 +11,7 @@ class User(BaseModel):
 class EditUser(BaseModel):
     email: Optional[EmailStr]
     phone: Optional[str]
+    profile_pic: Optional[str]
 
 class EditPassword(BaseModel):
     email: EmailStr
@@ -21,6 +23,7 @@ class ResponseUser(BaseModel):
     email: EmailStr
     phone: Optional[str]
     CreatedAt: datetime
+    profile_pic: str
 
     class Config:
         orm_mode = True

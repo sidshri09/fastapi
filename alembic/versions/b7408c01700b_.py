@@ -1,8 +1,8 @@
-"""auto-generated revision
+"""empty message
 
-Revision ID: 56a89318a3b5
+Revision ID: b7408c01700b
 Revises: 
-Create Date: 2022-01-08 15:10:34.017432
+Create Date: 2022-01-19 16:59:18.071873
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '56a89318a3b5'
+revision = 'b7408c01700b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -33,7 +33,7 @@ def upgrade():
     sa.Column('published', sa.Boolean(), server_default='True', nullable=False),
     sa.Column('CreatedAt', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('parent_post', sa.Integer, nullable=True),
+    sa.Column('parent_post', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
