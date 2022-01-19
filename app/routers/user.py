@@ -39,7 +39,7 @@ def createUser(body: schemas.User, db: Session = Depends(get_db)):
     # cur.execute("""INSERT INTO posts (content, \"like\", dislike, love) VALUES(%s,%s,%s,%s) RETURNING *""", (body.content, body.like, body.dislike, body.love))
     # conn.commit()
     # records = cur.fetchall()
-    users=db.query(models.User).filter(models.User.email == id)
+    users=db.query(models.User).filter(models.User.email == body.email)
     if users.first():
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,detail="email id already present")
     hashed_pwd = utils.hash(body.password)
