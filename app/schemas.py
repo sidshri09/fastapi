@@ -69,6 +69,8 @@ class Vote(BaseModel):
     post_id:int
     vote_dir:bool
 
+
+
 class ResponseVote(BaseModel):
     post_id:Optional[int]
     user_id:Optional[int]

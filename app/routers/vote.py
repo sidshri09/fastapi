@@ -11,11 +11,15 @@ router = APIRouter(
     tags= ["Votes"]
 )
 
-@router.get("/{post_id}", response_model=List[schemas.Vote])
+@router.get("/{post_id}", response_model=schemas.ResponseVote)
 def getUsers(post_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
-    users=db.query(models.Vote).filter(models.Vote.post_id == post_id, models.Vote.user_id == current_user.id).first()
-    if users:
-     return users
+    votes=db.query(models.Vote).filter(models.Vote.post_id == post_id, models.Vote.user_id == current_user.id)
+    print(votes)
+    if votes.first():
+     print(votes.first().post_id)
+     print(votes.first().user_id)
+     return votes.first()
+
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="vote not found")
 
 
