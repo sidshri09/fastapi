@@ -73,11 +73,18 @@ def updateUser(body: schemas.EditUser, db: Session = Depends(get_db),current_use
     # conn.commit()
     # records = cur.fetchall()
     # print("inside PUT printing records from DB",records)
-
     users=db.query(models.User).filter(models.User.id == current_user.id)
     if users.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"user with id: {id} not found")
     body.email = current_user.email
+    if(body.profile_pic == None):
+        if(users.first().profile_pic != None):
+            body.profile_pic = users.first().profile_pic
+    
+    if(body.phone == None):
+        if(users.first().phone != None):
+            body.phone = users.first().phone
+
     users.update(body.dict(),synchronize_session=False)
     db.commit()
     return {"message":"user details updated"}
