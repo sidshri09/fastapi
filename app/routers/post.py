@@ -86,7 +86,13 @@ def deletePost(id: int, db: Session = Depends(get_db), current_user:int = Depend
     # conn.commit()
     # records = cur.fetchall()
     records=db.query(models.Post).filter(models.Post.id == id)
+    replies=db.query(models.Post).filter(models.Post.parent_post == id)
     
+    if replies.all() != None:
+        for pst in replies.all():
+            print(pst.parent_post)
+            pst.parent_post = None
+
     if records.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"post with id: {id} not found")
     
