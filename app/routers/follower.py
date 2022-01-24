@@ -31,6 +31,16 @@ def getFollowers(follower_id: str,db: Session = Depends(get_db),current_user:int
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="followings not found")
 
 
+@router.get("/one/{following_id}", response_model=schemas.FollowingOut)
+def getFollowers(following_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
+    followings=db.query(models.Follower).filter(models.Follower.follower_id == current_user.id, models.Follower.following_id == following_id)
+    print(followings)
+    if followings.first():
+        return followings.first()
+
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="followings not found")
+
+
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model = schemas.FollowingOut)
 def addVote(body: schemas.FollowingIn, db: Session = Depends(get_db), current_user:int = Depends(oauth2.get_current_user)):
     # cur.execute("""INSERT INTO posts (content, \"like\", dislike, love) VALUES(%s,%s,%s,%s) RETURNING *""", (body.content, body.like, body.dislike, body.love))
