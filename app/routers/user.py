@@ -31,7 +31,7 @@ def getUsers(db: Session = Depends(get_db),current_user:int = Depends(oauth2.get
 def fetchUserWithId(id: str, resp: Response, db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
     # cur.execute("""SELECT * FROM posts WHERE id=%s""",[id])
     # records = cur.fetchone()
-    users=db.query(models.User,func.count(models.Follower.follower_id).label("followers")).join(models.Follower,models.Follower.following_id == models.User.id, isouter=True).group_by(models.User.id)
+    users=db.query(models.User,func.count(models.Follower.follower_id).label("followers")).join(models.Follower,models.Follower.following_id == models.User.id, isouter=True).group_by(models.User.id).filter(models.User.email == id)
     if users.first():
         return users.first()
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"user with id: {id} not found")
