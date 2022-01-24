@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from .. import models, schemas
 from ..database import get_db
 from app import oauth2
+from sqlalchemy import func
+
 
 
 router = APIRouter(
@@ -20,6 +22,14 @@ def getFollowers(following_id: str,db: Session = Depends(get_db),current_user:in
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="followers not found")
 
+@router.get("/all/{following_id}")
+def getFollowers(following_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
+    users=db.query(models.User).join(models.Follower,models.Follower.follower_id == models.User.id, isouter=True).order_by(models.Follower.following_id).filter(models.Follower.following_id == following_id)
+    print(users.all())
+    if users.all():
+        return users.all()
+
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="followers not found")
 
 @router.get("/gurus/{follower_id}", response_model=List[schemas.FollowingOut])
 def getFollowers(follower_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
