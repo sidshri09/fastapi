@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from .. import models, schemas, utils
 from ..database import get_db
 from app import oauth2
+from sqlalchemy import func
 
 
 router = APIRouter(
@@ -17,9 +18,11 @@ router = APIRouter(
 #
 #
 #
-@router.get("/", response_model=List[schemas.ResponseUser])
+@router.get("/", response_model= List[schemas.UserOut])
 def getUsers(db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user), limit:int =15, skip:int =0, search:Optional[str]=''):
-    users=db.query(models.User).filter(models.User.email.contains(search)).limit(limit).offset(skip).all()
+    # users=db.query(models.User).filter(models.User.email.contains(search)).limit(limit).offset(skip).all()
+    users = db.query(models.User,func.count(models.Follower.follower_id).label("followers")).join(models.Follower,models.Follower.following_id == models.User.id, isouter=True).group_by(models.User.id).filter(models.User.email.contains(search)).limit(limit).offset(skip).all()
+
     if users:
      return users
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="users not found")

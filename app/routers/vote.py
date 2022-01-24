@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 @router.get("/{post_id}", response_model=schemas.ResponseVote)
-def getUsers(post_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
+def getVotes(post_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
     votes=db.query(models.Vote).filter(models.Vote.post_id == post_id, models.Vote.user_id == current_user.id)
     print(votes)
     if votes.first():
@@ -41,9 +41,7 @@ def addVote(body: schemas.Vote, db: Session = Depends(get_db), current_user:int 
                 return votes
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="vote not submitted")
         
-        if body.vote_dir == False:
-            records=db.query(models.Vote).filter(models.Vote.post_id == body.post_id, models.Vote.user_id == current_user.id)
-        
+        if body.vote_dir == False:        
             if records.first() == None:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="vote does not exist")
             

@@ -28,6 +28,13 @@ class ResponseUser(BaseModel):
     class Config:
         orm_mode = True
 
+class UserOut(BaseModel):
+    User: ResponseUser
+    followers: int
+
+    class Config:
+        orm_mode = True
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
@@ -74,6 +81,17 @@ class Vote(BaseModel):
 class ResponseVote(BaseModel):
     post_id:Optional[int]
     user_id:Optional[int]
+
+    class Config:
+        orm_mode = True
+
+class FollowingIn(BaseModel):
+    following_id: int
+    follow_dir: bool
+
+class FollowingOut(BaseModel):
+    follower_id: Optional[int]
+    following_id: Optional[int]
 
     class Config:
         orm_mode = True
