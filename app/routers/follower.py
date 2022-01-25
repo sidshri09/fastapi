@@ -31,9 +31,9 @@ def getFollowers(following_id: str,db: Session = Depends(get_db),current_user:in
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="followers not found")
 
-@router.get("/gurus/{follower_id}", response_model=List[schemas.FollowingOut])
+@router.get("/gurus/{follower_id}")
 def getFollowers(follower_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
-    followings=db.query(models.Follower).filter(models.Follower.follower_id == follower_id)
+    followings=db.query(models.User).join(models.Follower,models.Follower.following_id == models.User.id, isouter=True).order_by(models.Follower.follower_id).filter(models.Follower.follower_id == follower_id)
     print(followings)
     if followings.all():
         return followings.all()
