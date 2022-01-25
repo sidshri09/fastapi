@@ -13,8 +13,8 @@ router = APIRouter(
     tags= ["Followers"]
 )
 
-@router.get("/{following_id}", response_model=List[schemas.FollowingOut])
-def getFollowers(following_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
+@router.get("/{following_id}")
+def getFollowerIds(following_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
     followers=db.query(models.Follower).filter(models.Follower.following_id == following_id)
     print(followers)
     if followers.all():
@@ -22,8 +22,8 @@ def getFollowers(following_id: str,db: Session = Depends(get_db),current_user:in
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="followers not found")
 
-@router.get("/all/{following_id}")
-def getFollowers(following_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
+@router.get("/all/{following_id}", response_model=List[schemas.ResponseUser])
+def getAllFollowers(following_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
     users=db.query(models.User).join(models.Follower,models.Follower.follower_id == models.User.id, isouter=True).order_by(models.Follower.following_id).filter(models.Follower.following_id == following_id)
     print(users.all())
     if users.all():
@@ -31,8 +31,8 @@ def getFollowers(following_id: str,db: Session = Depends(get_db),current_user:in
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="followers not found")
 
-@router.get("/gurus/{follower_id}")
-def getFollowers(follower_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
+@router.get("/gurus/{follower_id}", response_model=List[schemas.ResponseUser])
+def getFollowings(follower_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
     followings=db.query(models.User).join(models.Follower,models.Follower.following_id == models.User.id, isouter=True).order_by(models.Follower.follower_id).filter(models.Follower.follower_id == follower_id)
     print(followings)
     if followings.all():
@@ -40,9 +40,8 @@ def getFollowers(follower_id: str,db: Session = Depends(get_db),current_user:int
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="followings not found")
 
-
-@router.get("/one/{following_id}", response_model=schemas.FollowingOut)
-def getFollowers(following_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
+@router.get("/one/{following_id}", response_model=schemas.ResponseUser)
+def getAFollower(following_id: str,db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
     followings=db.query(models.Follower).filter(models.Follower.follower_id == current_user.id, models.Follower.following_id == following_id)
     print(followings)
     if followings.first():
@@ -52,7 +51,7 @@ def getFollowers(following_id: str,db: Session = Depends(get_db),current_user:in
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model = schemas.FollowingOut)
-def addVote(body: schemas.FollowingIn, db: Session = Depends(get_db), current_user:int = Depends(oauth2.get_current_user)):
+def updateFollowing(body: schemas.FollowingIn, db: Session = Depends(get_db), current_user:int = Depends(oauth2.get_current_user)):
     # cur.execute("""INSERT INTO posts (content, \"like\", dislike, love) VALUES(%s,%s,%s,%s) RETURNING *""", (body.content, body.like, body.dislike, body.love))
     # conn.commit()
     # records = cur.fetchall()

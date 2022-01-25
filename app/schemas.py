@@ -35,6 +35,12 @@ class UserOut(BaseModel):
     class Config:
         orm_mode = True
 
+class FollowerOut(BaseModel):
+    User: ResponseUser
+    
+    class Config:
+        orm_mode = True
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
